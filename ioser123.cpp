@@ -91,7 +91,7 @@ void IOSer123::saveSettings()
     settings.setValue("outputPath", *outputPath);
 }
 
-QSize IOSer123::getWidthHeight(int scale)
+QSize IOSer123::getWidthHeight(float scale)
 {
     int w, h;
     float ratio = (float) sourceWidth / (float) sourceHeight;
@@ -183,11 +183,18 @@ void IOSer123::on_generateButton_clicked()
         saveSettings();
 
         if (isImage) {
-            renderFromImage();
+            renderFromImage(getPlatform());
         } else {
-            renderFromSvg();
+            renderFromSvg(getPlatform());
         }
     }
+}
+
+Platform IOSer123::getPlatform() {
+    if (ui->iOSRadioButton->isChecked()) {
+        return ios;
+    }
+    return android;
 }
 
 void IOSer123::openFile(QString file)
@@ -195,7 +202,7 @@ void IOSer123::openFile(QString file)
     setFile(file);
 }
 
-void IOSer123::renderFromImage() {
+void IOSer123::renderFromImage(Platform platform) {
     QFileInfo fileInfo(*sourcePath);
 
     QImage sourceImage = QImage(*sourcePath);
@@ -204,20 +211,53 @@ void IOSer123::renderFromImage() {
 
         QString targetFilename(ui->nameEdit->text());
 
-        for (int i = 1; i < 4; i++) {
-            QSize size = getWidthHeight(i);
+        QList<float> sizes;
+        QList<QString> filenames;
+
+        switch (platform) {
+        case ios:
+            for (int i = 1; i < 4; i++)  {
+                sizes.append((float) i);
+                filenames.append(getImagesPathIOS(targetFilename) + "/" + targetFilename + "@x" + QString::number(i) + ".png");
+            }
+            break;
+        default:
+            sizes.append(120.0/160.0);
+            sizes.append(160.0/160.0);
+            sizes.append(240.0/160.0);
+            sizes.append(320.0/160.0);
+            sizes.append(480.0/160.0);
+            sizes.append(640.0/160.0);
+            filenames.append(*outputPath + "/ldpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/hdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/xhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/xxhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/xxxhdpi/" + targetFilename + ".png");
+            QDir(*outputPath).mkdir("ldpi");
+            QDir(*outputPath).mkdir("mdpi");
+            QDir(*outputPath).mkdir("hdpi");
+            QDir(*outputPath).mkdir("xhdpi");
+            QDir(*outputPath).mkdir("xxhdpi");
+            QDir(*outputPath).mkdir("xxxhdpi");
+            break;
+        }
+
+        for (int i = 0; i < sizes.length(); i++) {
+            QSize size = getWidthHeight(sizes.at(i));
             sourceImage
                     .scaled(size.width(), size.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation)
-                    .save(getImagesPath(targetFilename) + "/" + targetFilename + "@x" + QString::number(i) + ".png")
+                    .save(filenames.at(i));
                     ;
         }
 
-        saveContentsJSON(targetFilename, "png");
-
+        if (platform == ios) {
+            saveContentsJSON(targetFilename, "png");
+        }
     }
 }
 
-void IOSer123::renderFromSvg() {
+void IOSer123::renderFromSvg(Platform platform) {
     QFileInfo fileInfo(*sourcePath);
 
     QSvgRenderer svg(*sourcePath);
@@ -226,20 +266,55 @@ void IOSer123::renderFromSvg() {
     if (svgSize.width() > 0) {
         QString targetFilename(ui->nameEdit->text());
 
-        for (int i = 1; i < 4; i++) {
-            QSize size(getWidthHeight(i));
+        QList<float> sizes;
+        QList<QString> filenames;
+
+        switch (platform) {
+        case ios:
+            for (int i = 1; i < 4; i++)  {
+                sizes.append((float) i);
+                filenames.append(getImagesPathIOS(targetFilename) + "/" + targetFilename + "@x" + QString::number(i) + ".png");
+            }
+            break;
+        default:
+            sizes.append(120.0/160.0);
+            sizes.append(160.0/160.0);
+            sizes.append(240.0/160.0);
+            sizes.append(320.0/160.0);
+            sizes.append(480.0/160.0);
+            sizes.append(640.0/160.0);
+            filenames.append(*outputPath + "/ldpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/hdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/xhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/xxhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/xxxhdpi/" + targetFilename + ".png");
+            QDir(*outputPath).mkdir("ldpi");
+            QDir(*outputPath).mkdir("mdpi");
+            QDir(*outputPath).mkdir("hdpi");
+            QDir(*outputPath).mkdir("xhdpi");
+            QDir(*outputPath).mkdir("xxhdpi");
+            QDir(*outputPath).mkdir("xxxhdpi");
+            break;
+        }
+
+        for (int i = 0; i < sizes.length(); i++) {
+            QSize size = getWidthHeight(sizes.at(i));
             QImage imageThumb = QImage(size.width(), size.height(), QImage::Format_ARGB32);
             imageThumb.fill(0x00ffffff);
             QPainter painter(&imageThumb);
             svg.render(&painter);
-            imageThumb.save(getImagesPath(targetFilename) + "/" + targetFilename + "@x" + QString::number(i) + ".png");
+            imageThumb.save(filenames.at(i));
         }
-        saveContentsJSON(targetFilename, "png");
+
+        if (platform == ios) {
+            saveContentsJSON(targetFilename, "png");
+        }
 
     }
 }
 
-QString IOSer123::getImagesPath(QString targetFilename) {
+QString IOSer123::getImagesPathIOS(QString targetFilename) {
     QString imagesPath(*outputPath + QString("/") + targetFilename + QString(".imageset"));
     QDir imagesPathRef(imagesPath);
     if (!imagesPathRef.exists()) {
@@ -249,7 +324,7 @@ QString IOSer123::getImagesPath(QString targetFilename) {
 }
 
 void IOSer123::saveContentsJSON(QString targetFilename, QString extension) {
-    QFile f(getImagesPath(targetFilename) + "/Contents.json");
+    QFile f(getImagesPathIOS(targetFilename) + "/Contents.json");
     if (f.open(QFile::WriteOnly)) {
         f.write(getContentsJSON(targetFilename, extension).toLocal8Bit());
     }

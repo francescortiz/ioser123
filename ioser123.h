@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 
+
+enum Platform {
+    ios,
+    android
+};
+
+
 namespace Ui {
 class IOSer123;
 }
@@ -51,17 +58,19 @@ private:
     bool isImage;
     const QString *m_sSettingsFile = NULL;
 
-    void renderFromImage();
-    void renderFromSvg();
+    void renderFromImage(Platform platform);
+    void renderFromSvg(Platform platform);
     void createImages(QImage sourceImage, int targetWidth);
     void loadSettings();
     void saveSettings();
-    QSize getWidthHeight(int scale);
+    QSize getWidthHeight(float scale);
 
-    QString getImagesPath(QString targetFilename);
+    QString getImagesPathIOS(QString targetFilename);
 
     void saveContentsJSON(QString targetFilename, QString extension);
     QString getContentsJSON(QString name, QString extension);
+    Platform getPlatform();
+
 private slots:
     void adjustSizeDelayed();
 
