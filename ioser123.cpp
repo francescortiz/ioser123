@@ -147,8 +147,8 @@ bool IOSer123::setFile(QString path) {
         ui->sizeLabel->setText(QString::number(sourceWidth) + "x" + QString::number(sourceHeight));
         ui->ratioLabel->setText(QString::number((float) sourceWidth / (float) sourceHeight));
 
-        if (sourceWidth > 500 ||sourceHeight  > 500) {
-            imageThumb = imageThumb.scaled(500, 500, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        if (sourceWidth > 320 ||sourceHeight  > 320) {
+            imageThumb = imageThumb.scaled(320, 320, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
 
         ui->filenameLabel->setText(fileInfo.fileName());
