@@ -228,18 +228,18 @@ void IOSer123::renderFromImage(Platform platform) {
             sizes.append(320.0/160.0);
             sizes.append(480.0/160.0);
             sizes.append(640.0/160.0);
-            filenames.append(*outputPath + "/ldpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/mdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/hdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/xhdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/xxhdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/xxxhdpi/" + targetFilename + ".png");
-            QDir(*outputPath).mkdir("ldpi");
-            QDir(*outputPath).mkdir("mdpi");
-            QDir(*outputPath).mkdir("hdpi");
-            QDir(*outputPath).mkdir("xhdpi");
-            QDir(*outputPath).mkdir("xxhdpi");
-            QDir(*outputPath).mkdir("xxxhdpi");
+            filenames.append(*outputPath + "/mipmap-ldpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-mdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-hdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-xhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-xxhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-xxxhdpi/" + targetFilename + ".png");
+            QDir(*outputPath).mkdir("mipmap-ldpi");
+            QDir(*outputPath).mkdir("mipmap-mdpi");
+            QDir(*outputPath).mkdir("mipmap-hdpi");
+            QDir(*outputPath).mkdir("mipmap-xhdpi");
+            QDir(*outputPath).mkdir("mipmap-xxhdpi");
+            QDir(*outputPath).mkdir("mipmap-xxxhdpi");
             break;
         }
 
@@ -283,18 +283,18 @@ void IOSer123::renderFromSvg(Platform platform) {
             sizes.append(320.0/160.0);
             sizes.append(480.0/160.0);
             sizes.append(640.0/160.0);
-            filenames.append(*outputPath + "/ldpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/mdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/hdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/xhdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/xxhdpi/" + targetFilename + ".png");
-            filenames.append(*outputPath + "/xxxhdpi/" + targetFilename + ".png");
-            QDir(*outputPath).mkdir("ldpi");
-            QDir(*outputPath).mkdir("mdpi");
-            QDir(*outputPath).mkdir("hdpi");
-            QDir(*outputPath).mkdir("xhdpi");
-            QDir(*outputPath).mkdir("xxhdpi");
-            QDir(*outputPath).mkdir("xxxhdpi");
+            filenames.append(*outputPath + "/mipmap-ldpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-mdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-hdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-xhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-xxhdpi/" + targetFilename + ".png");
+            filenames.append(*outputPath + "/mipmap-xxxhdpi/" + targetFilename + ".png");
+            QDir(*outputPath).mkdir("mipmap-ldpi");
+            QDir(*outputPath).mkdir("mipmap-mdpi");
+            QDir(*outputPath).mkdir("mipmap-hdpi");
+            QDir(*outputPath).mkdir("mipmap-xhdpi");
+            QDir(*outputPath).mkdir("mipmap-xxhdpi");
+            QDir(*outputPath).mkdir("mipmap-xxxhdpi");
             break;
         }
 
